@@ -36,7 +36,7 @@ bom_data_sep <-
 
 bom_data_avrdaytmp <- 
    bom_data_sep %>%   
-        mutate_at(vars(tmp_min, tmp_max, Rainfall, Solar_exposure), as.numeric) %>%  # change values/measurements to numbers
+        mutate_at(vars(tmp_min, tmp_max, Rainfall), as.numeric) %>%  # change values/measurements to numbers
         mutate(diff_daily_tmp = tmp_max - tmp_min) %>%   # create tmp_diff column
         group_by(Month) %>% 
         summarize(mean_month_tmp = mean(diff_daily_tmp)) %>% 
@@ -55,7 +55,12 @@ view(bom_data_avrdaytmp)
 
 bom_stations_int <- 
       bom_stations  %>% 
-        gather( key = "Station_number", value = "info)  %>% 
+        gather( key = station_number, value = measure)  %>% 
+        gather( key = Station_number, value = measure, -info)
+
+gather(bom_stations, )
+  
+  > cows_long <- gather(cows, key = weight_type, value = weight, -id)
 
   
 # gather(cows, key = "weight_type", value = "weight",  weight1, weight2)
@@ -72,6 +77,16 @@ example(gather)
 > 
 > cows <- tibble(id = c(1,2,3), weight1 =c(203, 227, 193), weight2 = c(365, 344, 329))
 > 
+
+> cows
+# A tibble: 3 x 3
+     id weight1 weight2
+  <dbl>   <dbl>   <dbl>
+1     1     203     365
+2     2     227     344
+3     3     193     329
+
+
 > gather(cows, key = "weight_type", value = "weight",  weight1, weight2)
 # A tibble: 6 x 3
      id weight_type weight
@@ -98,21 +113,8 @@ example(gather)
 9 weight2        329
 > 
 > cows_long <- gather(cows, key = weight_type, value = weight, -id)
-> 
-> spread(cows_long, key = weight_type, value = weight)
-# A tibble: 3 x 3
-     id weight1 weight2
-  <dbl>   <dbl>   <dbl>
-1     1     203     365
-2     2     227     344
-3     3     193     329
-> cows
-# A tibble: 3 x 3
-     id weight1 weight2
-  <dbl>   <dbl>   <dbl>
-1     1     203     365
-2     2     227     344
-3     3     193     329
+
+
 
 
 
