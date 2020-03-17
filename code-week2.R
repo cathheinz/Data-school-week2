@@ -22,9 +22,15 @@ head(bom_date)
 
 bom_data_sep <- 
             bom_data %>% 
-              separate(Temp_min_max, into = c('tmp_min', 'tmp_max'), sep = '/') %>%     #splitting the combined max&min tmp
-              filter(tmp_min != '-', tmp_max != '-', Rainfall != '-', Solar_exposure !='-')  %>%   #excluding all rows with missing values                
-              summarise('Station_number' = tmp_min)
+              separate(Temp_min_max, into = c('tmp_min', 'tmp_max'), sep = '/')    #splitting the combined max&min tmp
+              filter(tmp_min != '-', tmp_max != '-', Rainfall != '-', Solar_exposure !='-')  #excluding all rows with missing values
+
+
+bom_data_sep %>% 
+              group_by(Station_number) %>%  #NOOOOO '' when grouping
+              summarise('Day' = n())
+
+  
 
 view(bom_data_sep)
   
