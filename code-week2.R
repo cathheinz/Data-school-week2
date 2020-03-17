@@ -6,7 +6,8 @@ library(tidyverse)
 
 
 ######### CHALLENGE ########
-##For each station, how many days have a minimum temperature, a maximum temperature and a rainfall measurement recorded?
+##Question1 ##
+#For each station, how many days have a minimum temperature, a maximum temperature and a rainfall measurement recorded?
 
 
 bom_data <- read_csv("C:/Users/ing06d/Documents/Data school FOCUS/Data-week2/Data-school-week2/BOM_data.csv")
@@ -26,13 +27,20 @@ bom_data_sep <-
               filter(tmp_min != '-', tmp_max != '-', Rainfall != '-', Solar_exposure !='-')  #excluding all rows with missing values
 
 
-bom_data_sep %>% 
+answerQ1 <- 
+            bom_data_sep %>% 
               group_by(Station_number) %>%  #NOOOOO '' when grouping
               summarise('Day' = n())
 
   
 
-view(bom_data_sep)
+view(answerQ1)
+
+##Question2 ##
+#Which month saw the lowest average daily temperature difference?
+
+
+
   
   
   
