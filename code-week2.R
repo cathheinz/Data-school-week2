@@ -49,74 +49,26 @@ view(bom_data_avrdaytmp)
 
 ## Question 3 ##
 # Which state saw the lowest average daily temperature difference?
-  # gather the 'bom-stations' file
+  # get the 'bom-stations' and BOM_data files on forms so they can be joined
   # join somehow... with 'bom_data' file
 
 
-bom_stations_int <- 
+#bom_station file ready to be joined
+bom_stations_join <- 
       bom_stations  %>% 
-        gather( key = station_number, value = measure)  %>% 
-        gather( key = Station_number, value = measure, -info)
+        gather( key = Station_number, value = measure, -info) %>% # the -info seems to let R know to exclude the info column
+        spread( key = info, value = measure )
 
-gather(bom_stations, )
+#getting the bom_data file ready to be joined
+bom_data_join <- 
+      bom_data_sep %>% 
+        mutate_at(vars(tmp_min, tmp_max, Rainfall), as.numeric) %>%
+        group_by(Station_number) %>% 
+        summarise( mean_tmp_min = mean(tmp_min), mean_tmp_max = mean(tmp_max), mean_Rainfall =  mean(Rainfall) ) %>% 
+        mutate_at(vars(Station_number), as.character)
+
+#joining the two new tibbles, both 20x4/8
+bom_joined <- 
+      inner_join(bom_stations_join, bom_data_join, by = 'Station_number')
   
-  > cows_long <- gather(cows, key = weight_type, value = weight, -id)
 
-  
-# gather(cows, key = "weight_type", value = "weight",  weight1, weight2)
-
-  view(bom_stations_int)
-
-example(gather)
-
-
-
-######
- ############################# functions gather, spread, separate, write_csv - after lunch starred by Stephen ################
-> 
-> 
-> cows <- tibble(id = c(1,2,3), weight1 =c(203, 227, 193), weight2 = c(365, 344, 329))
-> 
-
-> cows
-# A tibble: 3 x 3
-     id weight1 weight2
-  <dbl>   <dbl>   <dbl>
-1     1     203     365
-2     2     227     344
-3     3     193     329
-
-
-> gather(cows, key = "weight_type", value = "weight",  weight1, weight2)
-# A tibble: 6 x 3
-     id weight_type weight
-  <dbl> <chr>        <dbl>
-1     1 weight1        203
-2     2 weight1        227
-3     3 weight1        193
-4     1 weight2        365
-5     2 weight2        344
-6     3 weight2        329
-> 
-> gather(cows, key = "weight_type", value = "weight")
-# A tibble: 9 x 2
-  weight_type weight
-  <chr>        <dbl>
-1 id               1
-2 id               2
-3 id               3
-4 weight1        203
-5 weight1        227
-6 weight1        193
-7 weight2        365
-8 weight2        344
-9 weight2        329
-> 
-> cows_long <- gather(cows, key = weight_type, value = weight, -id)
-
-
-
-
-
-  
-  
