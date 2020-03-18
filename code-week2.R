@@ -69,9 +69,17 @@ bom_data_join <-
 
 #joining the two new tibbles, both 20x4/8
 bom_joined <- 
-      inner_join(bom_stations_join, bom_data_join, by = 'Station_number')
+      inner_join(bom_stations_join, bom_data_join, by = 'Station_number') %>% 
+      group_by(state) %>% 
+      summarise(mean_state_tmp_min = mean(mean_tmp_min), mean_state_tmp_max = mean(mean_tmp_max)) %>% 
+      mutate("mean_tmp_diff_state" = mean_state_tmp_max - mean_state_tmp_min ) %>% 
+      arrange(mean_tmp_diff_state) %>% 
+      write_csv("C:/Users/ing06d/Documents/Data school FOCUS/Data-week2/Outputs/answerQ3.csv")
+
 
 # seems like all join-functions work in this instance
   # left_join(bom_stations_join, bom_data_join, by = 'Station_number')
   # full_join(bom_stations_join, bom_data_join, by = 'Station_number')  
+
+
 
