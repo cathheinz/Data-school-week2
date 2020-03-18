@@ -16,7 +16,8 @@ bom_stations <- read_csv("C:/Users/ing06d/Documents/Data school FOCUS/Data-week2
 #need to separate temperature column
 
 
-head(bom_date)
+head(bom_data)
+tail(bom_data)
 
 bom_data_sep <- 
             bom_data %>% 
@@ -69,7 +70,9 @@ bom_data_join <-
 
 #joining the two new tibbles, both 20x4/8
 bom_joined <- 
-      inner_join(bom_stations_join, bom_data_join, by = 'Station_number') %>% 
+      inner_join(bom_stations_join, bom_data_join, by = 'Station_number') 
+      
+  bom_joined %>% 
       group_by(state) %>% 
       summarise(mean_state_tmp_min = mean(mean_tmp_min), mean_state_tmp_max = mean(mean_tmp_max)) %>% 
       mutate("mean_tmp_diff_state" = mean_state_tmp_max - mean_state_tmp_min ) %>% 
@@ -80,6 +83,55 @@ bom_joined <-
 # seems like all join-functions work in this instance
   # left_join(bom_stations_join, bom_data_join, by = 'Station_number')
   # full_join(bom_stations_join, bom_data_join, by = 'Station_number')  
+
+
+
+## Question 4 ##
+# Does the westmost (lowest longitude) or eastmost (highest longitude) weather station
+  # in our dataset have a higher average solar exposure?
+
+# create new bom_data with solar exposure
+  
+bom_data_solar <- 
+  bom_data %>% 
+    filter(Solar_exposure != '-')  %>%   #only including solar exposure, doesn't matter if no tmp or rainfall
+    group_by(Station_number) %>% 
+    mutate_at(vars(Solar_exposure), as.numeric) %>%
+    summarise(mean_solar = mean(Solar_exposure))  
+
+#join new solar data (only 19 stations) with the file that has longitude (and 20 stations)
+
+bom_stat_solar <- 
+  bom_data_solar %>% 
+  mutate_at(vars(Station_number), as.character) %>%
+  full_join(bom_stations_join, bom_data_solar, by = 'Station_number')
+
+#left_join(bom_stations_join, bom_data_solar, by = 'Station_number') ## works too but 20 rows must be on left!
+
+bom_date_solar_lon <- 
+  bom_stat_solar %>%
+    arrange(desc(lon)) %>% 
+    select(Station_number, lon, mean_solar, state) %>% 
+    write_csv("C:/Users/ing06d/Documents/Data school FOCUS/Data-week2/Outputs/answerQ4.csv")
+    
+    
+    
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
