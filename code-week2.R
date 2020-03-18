@@ -70,5 +70,8 @@ bom_data_join <-
 #joining the two new tibbles, both 20x4/8
 bom_joined <- 
       inner_join(bom_stations_join, bom_data_join, by = 'Station_number')
-  
+
+# seems like all join-functions work in this instance
+  # left_join(bom_stations_join, bom_data_join, by = 'Station_number')
+  # full_join(bom_stations_join, bom_data_join, by = 'Station_number')  
 
